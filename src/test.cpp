@@ -266,12 +266,12 @@ void CVMat_to_Tensor(Mat img,Tensor* output_tensor,int input_rows,int input_cols
 int main()
 {
     /*--------------------------------配置关键信息------------------------------*/
-    string model_path="/home/ubuntu/learn/models/research/ssd_mobilenet_v1_coco_2017_11_17/frozen_inference_graph.pb";
-    string image_path="/home/ubuntu/learn/tensorflow-c++/objDet_export_tf2/image2.jpg";
+    string model_path="../ssd_mobilenet_v1_coco_2017_11_17/frozen_inference_graph.pb";
+    string image_path="../test_image/image1.jpg";
 
     // 输入图片的宽和高
-    int input_height = 900;
-    int input_width = 1352;
+    int input_height = 636;
+    int input_width = 1024;
 
     //　这里可以通过获取网络每一层的名字获得，下面有代码可以实现，也可以通过　saved_model_cli show --dir saved_model/ --all　获得
     string input_tensor_name="image_tensor";
@@ -349,7 +349,7 @@ int main()
     }
 
     cvtColor(img, img, COLOR_RGB2BGR);  // opencv读入的是BGR格式输入网络前转为RGB
-    resize(img,img,cv::Size(1352,900));  // 模型输入图像大小
+    resize(img,img,cv::Size(1024,636));  // 模型输入图像大小
     int pre_num = outputs[0].dim_size(1);  // 50  模型预测的目标数量
     auto tmap_pro = outputs[0].tensor<float, 2>();  //第一个是score输出shape为[1,50]
     auto tmap_clas = outputs[1].tensor<float, 2>();  //第二个是class输出shape为[1,50]
@@ -364,6 +364,7 @@ int main()
         cout << "Class ID: " << tmap_clas(0, pre_i) << endl;
         cout << "Probability: " << tmap_pro(0, pre_i) << endl;
         string id = to_string(int(tmap_clas(0, pre_i)));
+        string prob = to_string(float(tmap_pro(0, pre_i)));
         int xmin = int(tmap_coor(0, pre_i, 1) * input_width);
         int ymin = int(tmap_coor(0, pre_i, 0) * input_height);
         int xmax = int(tmap_coor(0, pre_i, 3) * input_width);
@@ -373,7 +374,7 @@ int main()
         cout << "Xmax is: " << xmax << endl;
         cout << "Ymax is: " << ymax << endl;
         rectangle(img, Point(xmin, ymin), Point(xmax, ymax), Scalar(255, 0, 0), 1, 1, 0);
-        putText(img, id, Point(xmin, ymin), FONT_HERSHEY_COMPLEX, 1.0, Scalar(255,0,0), 1);
+        putText(img, prob, Point(xmin, ymin), FONT_HERSHEY_COMPLEX, 1.0, Scalar(255,0,0), 1);
     }
     imshow("1", img);
     waitKey(0);

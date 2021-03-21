@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 
 add_definitions(-std=c++11)
 
-set(TENSORFLOW_ROOT_DIR /home/ubuntu/learn/tensorflow)
+set(TENSORFLOW_ROOT_DIR /home/zhao/learn/tensorflow)
 
 find_package(OpenCV REQUIRED)
 
@@ -23,7 +23,7 @@ include_directories(
 
 aux_source_directory(./src DIR_SRCS)
 
-link_directories(/home/ubuntu/learn/tensorflow/lib)
+link_directories(/home/zhao/learn/tensorflow/lib)
 
 add_executable(tf-cpp-demo ${DIR_SRCS})
 
